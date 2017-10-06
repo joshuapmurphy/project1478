@@ -27,6 +27,12 @@ public class Channel {
 		 * I'm guessing it will be a big if/else block that does different things
 		 * based off of what it was doing previously
 		*/
+		//check to see if any nodes are transmitting
+		//if they are, wait until transmission is done (i.e. 
+		//start back off counters for each transmitter when finished / line idle
+		//if Tx1 back off = 0 && != 0 
+		
+		//collision happens if both back offs are 0
 		currSlotIndex++;
 		return false;
 	}
