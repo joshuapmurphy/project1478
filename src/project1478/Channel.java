@@ -5,7 +5,8 @@ public class Channel {
 	public static final int NUM_SLOTS = 500000;
 	private Slot[] slotChannel;
 	private int currSlotIndex;
-	private DataSource input;
+	private DataSource input1;
+	private DataSource input2;
 	private Transmitter tx1;
 	private Transmitter tx2;
 	private Receiver rx1;
@@ -14,7 +15,8 @@ public class Channel {
 	public Channel(){
 		slotChannel = new Slot[NUM_SLOTS];
 		currSlotIndex = 0;
-		input = new DataSource();
+		input1 = new DataSource();
+		input2 = new DataSource();
 		tx1 = new Transmitter();
 		tx2 = new Transmitter();
 		rx1 = new Receiver();
