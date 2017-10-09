@@ -5,7 +5,10 @@ public class Channel {
 	public static final int NUM_SLOTS = 500000;
 	private Slot[] slotChannel;
 	private int currSlotIndex;
-	private int transmitCounter;
+	private int frameSlotLengthA;
+	private int frameSlotLengthC;
+	private int lamdaA;
+	private int lamdaC;
 	private boolean transmitting;
 	private int collisions;
 	private DataSource input1;
@@ -20,11 +23,10 @@ public class Channel {
 	public Node nodeC;
 	public Node nodeD;
 	
-	public Channel(){
+	public Channel(int lamA, int lamC){
 		slotChannel = new Slot[NUM_SLOTS];
 		currSlotIndex = 0;
 		collisions = 0;
-		transmitCounter = 10;  //NEED TO CALCULATE ACTUAL NUMBER
 		transmitting = false;
 		input1 = new DataSource();
 		input2 = new DataSource();
@@ -32,6 +34,11 @@ public class Channel {
 		nodeB = new Node();
 		nodeC = new Node();
 		nodeD = new Node();
+		lamdaA = lamA;
+		lamdaC = lamC;
+		
+		frameSlotLengthA = 103; //100 + 1 + 2
+		//frameSlotLengthC = (1500/lamdaC);
 		/*tx1 = new Transmitter();
 		tx2 = new Transmitter();
 		rx1 = new Receiver();
@@ -46,27 +53,27 @@ public class Channel {
 		 */
 		//check to see if any nodes are transmitting
 
-		if (!A.checkBusy() && !B.checkBusy()) {
+		if (!nodeA.checkBusy() && !nodeC.checkBusy()) {
 
-			if (A.getBackOff() == 0 && B.getBackOff() == 0) {
-				collisions = collisions + 1;
-				A.updateBackOff(false);
-				B.updateBackOff(false);
+			if (nodeA.getBackOff() == 0 && nodeC.getBackOff() == 0) {
+				collisions++;
+				nodeA.updateBackOff(false);
+				nodeC.updateBackOff(false);
 			}
 
-			else if (A.getBackOff() == 0) {
+			else if (nodeA.getBackOff() == 0 && nodeC.getBackOff() != 0) {
 				//A controls channel and starts transmitting
 				//start transmitting counter to indicate busy time
-				transmitCounter = 10393;
+				//transmitCounter = ;
 				transmitting = true;
-				A.changeBusyStatus();
+				nodeA.changeBusyStatus();
 			}
 
-			else if (B.getBackOff() == 0) {
+			else if (nodeA.getBackOff() != 0 && nodeC.getBackOff() == 0) {
 				//start transmitting counter to indicate busy time
-				transmitCounter = 10393; //FIX ACTUAL NUMBER
+				//transmitCounter = 10393; //FIX ACTUAL NUMBER
 				transmitting = true;
-				B.changeBusyStatus();
+				nodeC.changeBusyStatus();
 			}
 
 			else {
@@ -75,17 +82,17 @@ public class Channel {
 
 		}
 
-		else if (A.checkBusy() && (B.getBackOff() == 0)) {
+		else if (nodeA.checkBusy() && (nodeC.getBackOff() == 0)) {
 			//A collision occurred
 			collisions = collisions + 1;
 			//reset B's backoff
-			B.updateBackOff(false);
+			nodeC.updateBackOff(false);
 
 		}
 
-		else if (B.checkBusy() && (A.getBackOff() == 0)) {
+		else if (nodeC.checkBusy() && (nodeA.getBackOff() == 0)) {
 			collisions = collisions + 1;
-			A.updateBackOff(false);
+			nodeA.updateBackOff(false);
 		}
 
 		else {
@@ -114,25 +121,13 @@ public class Channel {
 	public static void main(String[] args){
 		final int numberOfSlots = 500000;
 		String filename = args[0];
-		Channel network = new Channel();
-		
-		//we need to initialize the nodes.  Can we make them global?
-		//Node nodeA = new Node(/*initialize with the random numbers*/);
-		//Node nodeB = new Node(/*initialize with the random numbers*/);
-		//Node nodeC = new Node(/*initialize with the random numbers*/);
-		//Node nodeD = new Node(/*initialize with the random numbers*/);
+		int lamdaA = Integer.parseInt(args[1]);
+		int lamdaC = Integer.parseInt(args[2]);
+		Channel network = new Channel(lamdaA, lamdaC);
 		
 		for (int i = 0; i < numberOfSlots; i++){
 			network.processSlot();
-			/*
-			 * 
-			 * 
-			 * 
-			 */
-			
-			//Nodes either need to be global variables or we need to re think our processSlot method.
-			
-			//update nodes
+						
 		}
 		network.outputResults(filename);
 	}

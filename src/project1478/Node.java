@@ -5,6 +5,8 @@ public class Node {
 	//We can delete  vvv this right?  JOSH MURTLE TURTLE
 	//private int collisions;
 	private int backOff;
+	private int diffs;
+	private int occupiedTime;
 	private boolean busy;
 	
 	public int getBackOff(){
@@ -21,7 +23,7 @@ public class Node {
 				//JOSH MURTLE TURTLE update with new backoff value
 			}
 			else {
-				--backOff;
+				backOff--;
 			}
 		}
 		else {
