@@ -111,14 +111,9 @@ public class Channel {
 					slotChannel[currSlotIndex].updateSlot("Idle");
 				}
 				else if(NodeCDIFS == 0 && nodeC.getBackOff() == 0){
-					if(nodeA.getBackOff() == 0){
-						System.out.println("Collision");
-					} 
-					else {
-						nodeC.changeBusyStatus(true);
-						NodeCFrame = frameSlotLength;
-						slotChannel[currSlotIndex].updateSlot("NodeCTx");
-					}
+					nodeC.changeBusyStatus(true);
+					NodeCFrame = frameSlotLength;
+					slotChannel[currSlotIndex].updateSlot("NodeCTx");
 				}
 			}
 			else if(nodeC.isBusy()){
