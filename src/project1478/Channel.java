@@ -429,80 +429,95 @@ public class Channel {
 			}
 		}
 	}
-	public void outputResults(String filename) throws IOException{
+	public void outputResults(BufferedWriter writer) throws IOException{
 		int totalASlots = 0, totalCSlots = 0;
-	    
-	    BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-	    
-		
+
 		for(int i = 0; i < NUM_SLOTS; i++){
-			
 			if(slotChannel[i].getSlotContent().equals("NodeATx")){
 				totalASlots++;
 			}
 			if(slotChannel[i].getSlotContent().equals("NodeCTx")) {
 				totalCSlots++;
 			}
-			
-			
 		}
 		writer.write("Collisions: " + collisions + "\n");
 		writer.write("Throughput: " + (((AFramesSent + CFramesSent)*1.5*8)/10) + " Kbps\n");
 	    writer.write("Fairness Index: " + (totalASlots * 1.0)/(totalCSlots * 1.0) + "\n");
-	    writer.close();
-		
+	    
 	}
 	
 	public static void main(String[] args){
 	
 		
 		Channel network = new Channel(50, 50, "A1");
-		runSimulation(network, "A1_50");
-		network = new Channel(100, 100, "A1");
-		runSimulation(network, "A1_100");
-		network = new Channel(200, 200, "A1");
-		runSimulation(network, "A1_200");
-		network = new Channel(300, 300, "A1");
-		runSimulation(network, "A1_300");
+		Channel network2 = new Channel(100, 100, "A1");
+		Channel network3 = new Channel(200, 200, "A1");
+		Channel network4 = new Channel(300, 300, "A1");
+		runSimulation(network, network2, network3, network4, "A1");
 		
 		network = new Channel(50, 50, "A2");
-		runSimulation(network, "A2_50");
-		network = new Channel(100, 100, "A2");
-		runSimulation(network, "A2_100");
-		network = new Channel(200, 200, "A2");
-		runSimulation(network, "A2_200");
-		network = new Channel(300, 300, "A2");
-		runSimulation(network, "A2_300");
+		network2 = new Channel(100, 100, "A2");
+		network3 = new Channel(200, 200, "A2");
+		network4 = new Channel(300, 300, "A2");
+		runSimulation(network, network2, network3, network4, "A2");
 
 		network = new Channel(50, 50, "B1");
-		runSimulation(network, "B1_50");
-		network = new Channel(100, 100, "B1");
-		runSimulation(network, "B1_100");
-		network = new Channel(200, 200, "B1");
-		runSimulation(network, "B1_200");
-		network = new Channel(300, 300, "B1");
-		runSimulation(network, "B1_300");
+		network2 = new Channel(100, 100, "B1");
+		network3 = new Channel(200, 200, "B1");
+		network4 = new Channel(300, 300, "B1");
+		runSimulation(network, network2, network3, network4, "B1");
 	
 		network = new Channel(50, 50, "B2");
-		runSimulation(network, "B2_50");
-		network = new Channel(100, 100, "B2");
-		runSimulation(network, "B2_100");
-		network = new Channel(200, 200, "B2");
-		runSimulation(network, "B2_200");
-		network = new Channel(300, 300, "B2");
-		runSimulation(network, "B2_300");
+		network2 = new Channel(100, 100, "B2");
+		network3 = new Channel(200, 200, "B2");
+		network4 = new Channel(300, 300, "B2");
+		runSimulation(network, network2, network3, network4, "B2");
+		
+		network = new Channel(100, 50, "A1");
+		network2 = new Channel(200, 100, "A1");
+		network3 = new Channel(400, 200, "A1");
+		network4 = new Channel(600, 300, "A1");
+		runSimulation(network, network2, network3, network4, "A1_2L");
+		
+		network = new Channel(100, 50, "A2");
+		network2 = new Channel(200, 100, "A2");
+		network3 = new Channel(400, 200, "A2");
+		network4 = new Channel(600, 300, "A2");
+		runSimulation(network, network2, network3, network4, "A2_2L");
+
+		network = new Channel(100, 50, "B1");
+		network2 = new Channel(200, 100, "B1");
+		network3 = new Channel(400, 200, "B1");
+		network4 = new Channel(600, 300, "B1");
+		runSimulation(network, network2, network3, network4, "B1_2L");
+	
+		network = new Channel(100, 50, "B2");
+		network2 = new Channel(200, 100, "B2");
+		network3 = new Channel(400, 200, "B2");
+		network4 = new Channel(600, 300, "B2");
+		runSimulation(network, network2, network3, network4, "B2_2L");
 		
 	}
-	public static void runSimulation(Channel network, String filename){
+	public static void runSimulation(Channel network, Channel network2, Channel network3, Channel network4, String filename){
 		for (int i = 0; i < NUM_SLOTS; i++){
-			network.processSlot();		
+			network.processSlot();	
+			network2.processSlot();
+			network3.processSlot();
+			network4.processSlot();
 		}
+		
 		try {
-			network.outputResults(filename + ".txt");
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filename+".txt"));
+			network.outputResults(writer);
+			network2.outputResults(writer);
+			network3.outputResults(writer);
+			network4.outputResults(writer);
+			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 }
 
