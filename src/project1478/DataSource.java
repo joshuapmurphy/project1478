@@ -15,8 +15,8 @@ public class DataSource {
 		//This while loop generates a set of exponentially distributed numbers
 		ArrayList<Double> exponentialNumbers = new ArrayList<Double>();
 		double total = 0.0;
-		while(total < 11.0){
-			double value = -1 * (1/(double)lamdaValue) * Math.log(1 - Math.random());
+		while(total < 12.0){
+			double value = -1 * (1/((double)lamdaValue)) * Math.log(1 - Math.random());
 			exponentialNumbers.add(value);
 			total += value;
 		}
@@ -28,7 +28,7 @@ public class DataSource {
 		for(int i = 0; i < exponentialNumbers.size(); i++){
 			int value = (int)(exponentialNumbers.get(i) / .00002);
 			currSlot += value;
-			if(currSlot >= 500000) break;
+			if(currSlot >= 510000) break;
 			slotNumbers.add(currSlot);
 		}
 	}
